@@ -31,7 +31,7 @@ public class GLMBasicTestMultinomial extends TestUtil {
   static Frame _covtype;
   static Frame _train;
   static Frame _test;
-  double _tol = 1e-10;
+  static double _tol = 1e-10;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -573,9 +573,12 @@ public class GLMBasicTestMultinomial extends TestUtil {
     double threshold = 1e-6;
     try {
       Frame fr = parse_test_file("/Users/wendycwong/temp/debug_multinomial_glm/multinomial_2enum_1num_3_class_training_set_20Rows.csv");
-      Vec v = fr.remove("C4");
-      fr.add("C4", v.toCategoricalVec());
-      v.remove();
+      String[] catCols = new String[]{"C1", "C2", "C4"};
+      for (int index=0; index < catCols.length; index++) {
+        Vec v = fr.remove(catCols[index]);
+        fr.add("C4", v.toCategoricalVec());
+        v.remove();
+      }
       Scope.track(fr);
       GLMParameters params = new GLMParameters(Family.multinomial);
       params._response_column = fr._names[fr.numCols()-1];
@@ -593,8 +596,16 @@ public class GLMBasicTestMultinomial extends TestUtil {
               false, false);
       int ncoeffPClass = dinfo.fullN()+1;
       double sumExp = 0;
-      double[] beta = new double[]{0.387797, 0.269003, 0.444987, 0.403535, 0.129472, 0.826823, 0.221008, 0.402504,
-              0.378747, 0.137892, 0.129652, 0.024352};
+      double[] beta = new double[]{6.032518056475340e-01, 2.640933210565435e-01, 9.776610628574375e-01, 
+              9.053994887993339e-01, 8.568094395996303e-01, 8.160944841628063e-01, 8.535849765221630e-01, 
+              9.089574716333825e-01, 9.307192993747759e-01, 9.026543767123323e-02, 4.433115852756973e-01, 
+              3.949082561729321e-01, 5.116906460935773e-01, 3.923280162531700e-01, 3.817220806386150e-02,
+              7.253019966760611e-01, 2.718688319609313e-02, 8.800342103367991e-01, 9.375494687132276e-01,
+              2.055074814305576e-01, 5.510301561096235e-01, 2.040023326788270e-02, 3.002179521713415e-02, 
+              3.359326736300998e-01, 9.851973786322425e-02, 3.778812121333486e-01, 5.341025070853849e-01,
+              9.687561732874905e-01, 8.975540155624436e-01, 9.473183322524110e-01, 5.087137287713507e-01,
+              6.719602905787800e-01, 9.956092031838000e-01, 1.517852940297946e-01, 6.513775311597036e-01,
+              2.969932659071039e-01, 7.898241942465704e-01, 2.295012581837947e-01, 2.875073629554708e-01};
       double[][] hessOctave = new double[][] {{3.077923688343536e+01,-8.685803439702172e-01,-1.697824483926594e+00,
               -1.330913565153130e-02,-1.677233669317430e+01,-1.873981054238402e-01,1.802337255199468e+00,
               1.870571937361168e+00,-1.400690019026108e+01,1.055978449394056e+00,-1.045127712728748e-01,
