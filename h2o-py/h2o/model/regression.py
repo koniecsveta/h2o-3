@@ -61,7 +61,7 @@ class H2ORegressionModel(ModelBase):
     def h2o_mean_absolute_error(y_actual, y_predicted, weights=None):
         """
         Mean absolute error regression loss.
-    
+
         :param y_actual: H2OFrame of actual response.
         :param y_predicted: H2OFrame of predicted response.
         :param weights: (Optional) sample weights
@@ -82,7 +82,7 @@ class H2ORegressionModel(ModelBase):
         """
         ModelBase._check_targets(y_actual, y_predicted)
         return _colmean((y_predicted - y_actual) ** 2)
-    
+
 
     def h2o_median_absolute_error(y_actual, y_predicted):
         """
@@ -124,8 +124,8 @@ class H2ORegressionModel(ModelBase):
         :returns: R-squared (best is 1.0, lower is worse).
         """
         ModelBase._check_targets(y_actual, y_predicted)
-        numerator = (weights * (y_actual - y_predicted) ** 2).sum()
-        denominator = (weights * (y_actual - _colmean(y_actual)) ** 2).sum()
+        numerator = (weights * (y_actual - y_predicted) ** 2).sum().flatten()
+        denominator = (weights * (y_actual - _colmean(y_actual)) ** 2).sum().flatten()
 
         if denominator == 0.0:
             return 1. if numerator == 0. else 0.  # 0/0 => 1, else 0
