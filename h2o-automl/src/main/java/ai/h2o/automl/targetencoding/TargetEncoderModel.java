@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class TargetEncoderModel extends Model<TargetEncoderModel, TargetEncoderModel.TargetEncoderParameters, TargetEncoderModel.TargetEncoderOutput> {
 
+  protected static final String ALGO_NAME = "TargetEncoder";
+
   private final transient TargetEncoder _targetEncoder;
 
   public TargetEncoderModel(Key<TargetEncoderModel> selfKey, TargetEncoderParameters parms, TargetEncoderOutput output, TargetEncoder tec) {
@@ -31,7 +33,7 @@ public class TargetEncoderModel extends Model<TargetEncoderModel, TargetEncoderM
     
     @Override
     public String algoName() {
-      return "TargetEncoder";
+      return ALGO_NAME;
     }
 
     @Override
@@ -120,7 +122,12 @@ public class TargetEncoderModel extends Model<TargetEncoderModel, TargetEncoderM
     return _targetEncoder.applyTargetEncoding(data, _parms._response_column, this._output._target_encoding_map, strategy,
             _parms._teFoldColumnName, _parms._withBlending, true, seed);
   }
-  
+
+  @Override
+  public Frame score(Frame fr) throws IllegalArgumentException {
+    return super.score(fr);
+  }
+
   @Override
   protected double[] score0(double data[], double preds[]){
     throw new UnsupportedOperationException("TargetEncoderModel doesn't support scoring. Use `transform()` instead.");

@@ -22,6 +22,10 @@ public class TargetEncoderBuilder extends ModelBuilder<TargetEncoderModel, Targe
     super.init(false);
   }
 
+  public TargetEncoderBuilder(final boolean startupOnce) {
+    super(new TargetEncoderModel.TargetEncoderParameters(), startupOnce);
+  }
+
   private class TargetEncoderDriver extends Driver {
     @Override
     public void computeImpl() {
@@ -45,8 +49,8 @@ public class TargetEncoderBuilder extends ModelBuilder<TargetEncoderModel, Targe
       TargetEncoderModel.TargetEncoderOutput output = new TargetEncoderModel.TargetEncoderOutput(TargetEncoderBuilder.this, _targetEncodingMap, priorMean);
       _targetEncoderModel = new TargetEncoderModel(_job._result, _parms, output, tec);
 
-      // Note: For now we are not going to make TargetEncoderModel to be a real model. It should be treated as a wrapper for just getting a mojo.
-      // DKV.put(targetEncoderModel);
+      _targetEncoderModel.write_lock(_job);
+      _targetEncoderModel.unlock(_job);
     }
 
     private void disableIgnoreConstColsFeature() {
@@ -69,5 +73,15 @@ public class TargetEncoderBuilder extends ModelBuilder<TargetEncoderModel, Targe
   @Override
   public boolean isSupervised() {
     return true;
+  }
+
+  @Override
+  public BuilderVisibility builderVisibility() {
+    return BuilderVisibility.Beta;
+  }
+
+  @Override
+  public String getName() {
+    return "targetencoder";
   }
 }
